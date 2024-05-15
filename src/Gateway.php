@@ -2,6 +2,7 @@
 
 namespace Ampeco\OmnipayKapitalBank;
 
+use Ampeco\OmnipayKapitalBank\Message\CreateCardRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
@@ -14,7 +15,6 @@ use Omnipay\Common\AbstractGateway;
  * @method \Omnipay\Common\Message\RequestInterface refund(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface fetchTransaction(array $options = [])
  * @method \Omnipay\Common\Message\RequestInterface void(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface createCard(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface updateCard(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface deleteCard(array $options = array())
  */
@@ -43,5 +43,10 @@ class Gateway extends AbstractGateway
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface createCard(array $options = array())
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface updateCard(array $options = array())
         // TODO: Implement @method \Omnipay\Common\Message\RequestInterface deleteCard(array $options = array())
+    }
+
+    public function createCard(array $options = array()): \Omnipay\Common\Message\RequestInterface|\Omnipay\Common\Message\AbstractRequest
+    {
+        return $this->createRequest(CreateCardRequest::class, $options);
     }
 }
