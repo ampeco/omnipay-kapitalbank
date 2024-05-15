@@ -1,6 +1,6 @@
 <?php
 
-namespace Ampeco\OmnipayKapitalBank\Message;
+namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Omnipay\Common\Message\AbstractResponse;
 use Omnipay\Common\Message\RequestInterface;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Ampeco\OmnipayKapitalBank\Message;
+namespace Ampeco\OmnipayKapitalbank\Message;
 
 class CreateCardRequest extends AbstractRequest
 {
@@ -8,16 +8,16 @@ class CreateCardRequest extends AbstractRequest
     public function getData(): array
     {
         return [
-            'Merchant' => ,
-            'Amount' => ,
-            'ApproveURL' =>,
-            'CancelURL' =>,
-            'DeclineURL' =>,
+            'Merchant' => $this->getMerchant(),
+            'Amount' => $this->getAmount(),
+            'ApproveURL' => $this->getApproveUrl(),
+            'CancelURL' => $this->getCancelUrl(),
+            'DeclineURL' => $this->getDeclineUrl(),
         ];
     }
 
     protected function createResponse(array $data, int $statusCode): Response
     {
-        // TODO: Implement createResponse() method.
+        return $this->response = new CreateCardResponse($this, $data, $statusCode);
     }
 }

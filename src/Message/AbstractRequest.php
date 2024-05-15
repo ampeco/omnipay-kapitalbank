@@ -1,6 +1,6 @@
 <?php
 
-namespace Ampeco\OmnipayKapitalBank\Message;
+namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Ampeco\OmnipayKapitalBank\Gateway;
 use Omnipay\Common\Message\AbstractRequest as OmniPayAbstractRequest;
@@ -52,7 +52,15 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
 
     public function getData()
     {
-        // TODO: Implement sendData() method.
+       return [
+         'merchant' => $this->getMerchant(),
+       ];
+    }
+
+    public function send()
+    {
+        //TODO send request
+        return new Response($this, [], 200);
     }
 
     public function sendData($data)
@@ -70,14 +78,9 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         return $this->getParameter('Merchant');
     }
 
-    public function setAmount($value)
-    {
-        return $this->setParameter('Amount', $value);
-    }
-
     public function getAmount()
     {
-        return $this->getParameter('Amount');
+        return number_format(parent::getAmount(), 2, '', '');
     }
 
     public function setApproveUrl($value)

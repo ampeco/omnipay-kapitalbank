@@ -12,6 +12,10 @@
         {
             "name": "Valentin Damyanov",
             "email": "valentin.damyanov@ampeco.global"
+        },
+        {
+            "name": "Diana Vracheva",
+            "email": "diana.vracheva@ampeco.global"
         }
     ],
     "require": {
