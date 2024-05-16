@@ -49,4 +49,15 @@ class Gateway extends AbstractGateway
     {
         return $this->createRequest(CreateCardRequest::class, $options);
     }
+
+    public function getCreateCardCurrency(): string
+    {
+//        return 'AZN';// TODO
+        return 'EUR';
+    }
+
+    public function getCreateCardAmount(): float
+    {
+        return 1;
+    }
 }
