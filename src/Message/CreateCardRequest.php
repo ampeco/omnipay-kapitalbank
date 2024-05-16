@@ -2,8 +2,6 @@
 
 namespace Ampeco\OmnipayKapitalbank\Message;
 
-use Ampeco\OmnipayKapitalbank\XmlBuilder;
-
 class CreateCardRequest extends AbstractRequest
 {
 
@@ -19,11 +17,6 @@ class CreateCardRequest extends AbstractRequest
             'DeclineURL' => $this->getDeclineUrl(),
             'Language' => $this->getLanguage(),
         ];
-    }
-
-    public function sendData($data)
-    {
-        parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildCreateCardXml()]));
     }
 
     protected function createResponse(array $data, int $statusCode): Response

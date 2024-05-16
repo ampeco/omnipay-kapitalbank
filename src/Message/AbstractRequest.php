@@ -3,6 +3,8 @@
 namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Ampeco\OmnipayKapitalBank\Gateway;
+use Ampeco\OmnipayKapitalbank\XmlBuilder;
+use DOMException;
 use Omnipay\Common\Message\AbstractRequest as OmniPayAbstractRequest;
 
 /**
@@ -57,11 +59,14 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
        ];
     }
 
+    /**
+     * @throws DOMException
+     */
     public function sendData($data)
     {
+        $xmlData = (new XmlBuilder($data))->buildCreateCardXml();
         $url = $this->getBaseUrl() . $this->getEndpoint();
 
-        // in method
         $merchantCertificate = $this->getMerchantCertificate();
         $certFile = tempnam(sys_get_temp_dir(), "cert_");
         file_put_contents($certFile, $merchantCertificate);
@@ -69,7 +74,6 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         $merchantKey = $this->getMerchantKey();
         $keyFile = tempnam(sys_get_temp_dir(), "cert_");
         file_put_contents($keyFile, $merchantKey);
-        //
 
         $ch = curl_init();
         $header = array("Content-Type: text/html; charset=utf-8");
@@ -81,19 +85,14 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSLCERT, $certFile);
         curl_setopt($ch, CURLOPT_SSLKEY, $keyFile);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data['payload']);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlData);
         curl_setopt($ch, CURLOPT_POST, true);
-
-
+        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $output = curl_exec($ch);
         curl_close($ch);
-        info('output.....', [$output]); ///
+
         $response = json_decode(json_encode(simplexml_load_string($output)), true);
-        info('array_data.....', [$response]); ///
-        return $response;
-
-
-        return $this->createResponse($response, $code); // return
+        return $this->createResponse($response, $statusCode);
     }
 
     public function setMerchant($value)
