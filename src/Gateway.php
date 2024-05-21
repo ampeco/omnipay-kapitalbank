@@ -2,11 +2,12 @@
 
 namespace Ampeco\OmnipayKapitalbank;
 
+use Ampeco\OmnipayKapitalbank\Message\CreateCardNotification;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardRequest;
+use Ampeco\OmnipayKapitalbank\Message\NotificationRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
- * @method \Omnipay\Common\Message\NotificationInterface acceptNotification(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface authorize(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface capture(array $options = array())
@@ -59,5 +60,10 @@ class Gateway extends AbstractGateway
     public function getCreateCardAmount(): float
     {
         return 1;
+    }
+
+    public function acceptNotification(array $options = array()): CreateCardNotification
+    {
+        return new CreateCardNotification($options);
     }
 }
