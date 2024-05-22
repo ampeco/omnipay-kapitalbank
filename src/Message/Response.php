@@ -17,6 +17,6 @@ class Response extends AbstractResponse
 
     public function isSuccessful(): bool
     {
-        return $this->code == 0; // TODO check
+        return $this->code == 0;
     }
 }
