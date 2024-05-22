@@ -4,8 +4,9 @@ namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Ampeco\OmnipayKapitalbank\XmlBuilder;
 
-class CreateCardRequest extends AbstractRequest
+class PurchaseRequest extends AbstractRequest
 {
+
     public function getData(): array
     {
         return [
@@ -23,11 +24,11 @@ class CreateCardRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildCreateCardXml()]));
+        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildPurchaseXml()]));
     }
 
     protected function createResponse(array $data, int $statusCode): Response
     {
-        return $this->response = new CreateCardResponse($this, $data, $statusCode);
+        return $this->response = new PurchaseResponse($this, $data, $statusCode);
     }
 }

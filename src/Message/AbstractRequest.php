@@ -64,7 +64,6 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
      */
     public function sendData($data)
     {
-        $xmlData = (new XmlBuilder($data))->buildCreateCardXml();
         $url = $this->getBaseUrl() . $this->getEndpoint();
 
         $merchantCertificate = $this->getMerchantCertificate();
@@ -85,7 +84,7 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
         curl_setopt($ch, CURLOPT_SSLCERT, $certFile);
         curl_setopt($ch, CURLOPT_SSLKEY, $keyFile);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlData);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data['payload']);
         curl_setopt($ch, CURLOPT_POST, true);
         $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         $output = curl_exec($ch);

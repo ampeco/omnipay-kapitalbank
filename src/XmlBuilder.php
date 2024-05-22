@@ -29,7 +29,7 @@ class XmlBuilder
         $orderType = $this->domDocument->createElement('OrderType', self::ORDER_TYPE_PURCHASE);
         $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
         $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
-        $currency = $this->domDocument->createElement('Currency', '944'); // TODO Take into account user currency form data and exchange if needed
+        $currency = $this->domDocument->createElement('Currency', $this->data['Currency']);
         $description = $this->domDocument->createElement('Description', self::CREATE_ORDER_OPERATION);
         $approveUrl = $this->domDocument->createElement('ApproveURL', $this->data['ApproveURL']);
         $cancelUrl = $this->domDocument->createElement('CancelURL', $this->data['CancelURL']);
@@ -62,6 +62,41 @@ class XmlBuilder
         $order->appendChild($addParams);
         $addParams->appendChild($customFields);
         $customFields->appendChild($param);
+        $tkkpg->appendChild($request);
+
+        $this->domDocument->appendChild($tkkpg);
+
+        return $this->domDocument->saveXML();
+    }
+
+    /**
+     * @throws DOMException
+     */
+    public function buildPurchaseXml(): bool|string
+    {
+        $tkkpg = $this->domDocument->createElement('TKKPG');
+        $request = $this->domDocument->createElement('Request');
+        $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_PURCHASE);
+        $language = $this->domDocument->createElement('Language', $this->data['Language']);
+        $order = $this->domDocument->createElement('Order');
+        $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
+        $orderId = $this->domDocument->createElement('OrderID', $this->data['OrderID']);
+        $sessionId = $this->domDocument->createElement('SessionID', $this->data['SessionID']);
+        $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
+        $currency = $this->domDocument->createElement('Currency', $this->data['Currency']);
+        $cardUid = $this->domDocument->createElement('CardUID', $this->data['CardUID']);
+        $eci = $this->domDocument->createElement('eci', 61);
+
+        $request->appendChild($operation);
+        $request->appendChild($language);
+        $request->appendChild($order);
+        $order->appendChild($merchant);
+        $order->appendChild($orderId);
+        $request->appendChild($sessionId);
+        $request->appendChild($amount);
+        $request->appendChild($currency);
+        $request->appendChild($cardUid);
+        $request->appendChild($eci);
         $tkkpg->appendChild($request);
 
         $this->domDocument->appendChild($tkkpg);
