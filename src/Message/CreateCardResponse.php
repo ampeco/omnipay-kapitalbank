@@ -8,7 +8,7 @@ class CreateCardResponse extends Response implements RedirectResponseInterface
 {
     public function isSuccessful() : bool
     {
-        return parent::isSuccessful() && $this->data['Response']['Status'] == self::ADD_CARD_STATUS_CODE;
+        return parent::isSuccessful() && $this->data['Response']['Status'] == self::SUCCESS_STATUS_CODE;
     }
 
     public function getOrder()

@@ -27,6 +27,7 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
     protected const API_URL_PROD = 'https://3dsrv.kapitalbank.az:5443';
 
     protected ?Gateway $gateway;
+    private $key;
 
     abstract protected function createResponse(array $data, int $statusCode): Response;
 
@@ -169,4 +170,45 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         $this->setParameter('Language', $value);
     }
 
+    public function getSenderCardUID()
+    {
+//        $this->key = 'Sender';
+//        return strtoupper($this->getParameter('' . $this->key . 'CardUID'));
+        return $this->getParameter('SenderCardUID');
+    }
+
+    public function setSenderCardUID($value)
+    {
+        $this->setParameter('SenderCardUID', $value);
+    }
+
+    public function setSessionId($value)
+    {
+        $this->setParameter('SessionId', $value);
+    }
+
+    public function getSessionId()
+    {
+        return $this->getParameter('SessionId');
+    }
+
+    public function setOrderId($value)
+    {
+        $this->setParameter('OrderId', $value);
+    }
+
+    public function getOrderId()
+    {
+        return $this->getParameter('OrderId');
+    }
+
+    public function setEci($value)
+    {
+        $this->setParameter('eci', $value);
+    }
+
+    public function getEci()
+    {
+        return $this->getParameter('eci');
+    }
 }

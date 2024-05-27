@@ -4,7 +4,7 @@ namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Ampeco\OmnipayKapitalbank\XmlBuilder;
 
-class PurchaseRequest extends AbstractRequest
+class InitialPurchaseRequest extends AbstractRequest
 {
 
     public function getData(): array
@@ -19,20 +19,19 @@ class PurchaseRequest extends AbstractRequest
             'CancelURL' => $this->getCancelUrl(),
             'DeclineURL' => $this->getDeclineUrl(),
             'Language' => $this->getLanguage(),
-            'OrderID' => $this->getOrderId(),
-            'SessionID' => $this->getSessionId(),
             'SenderCardUID' => $this->getSenderCardUID(),
-            'eci' => $this->getEci(),
         ];
     }
 
     public function sendData($data)
     {
-        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildPurchaseXml()]));
+        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildInitialXml()]));
     }
 
     protected function createResponse(array $data, int $statusCode): Response
     {
-        return $this->response = new PurchaseResponse($this, $data, $statusCode);
+        return $this->response = new InitialResponse($this, $data, $statusCode);
     }
 }
+
+

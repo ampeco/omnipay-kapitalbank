@@ -4,14 +4,15 @@ namespace Ampeco\OmnipayKapitalbank;
 
 use Ampeco\OmnipayKapitalbank\Message\CreateCardNotification;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardRequest;
+use Ampeco\OmnipayKapitalbank\Message\InitialPurchaseRequest;
 use Ampeco\OmnipayKapitalbank\Message\NotificationRequest;
+use Ampeco\OmnipayKapitalbank\Message\PurchaseRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
  * @method \Omnipay\Common\Message\RequestInterface authorize(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface capture(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface purchase(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface completePurchase(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface refund(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface fetchTransaction(array $options = [])
@@ -49,6 +50,16 @@ class Gateway extends AbstractGateway
     public function createCard(array $options = array())
     {
         return $this->createRequest(CreateCardRequest::class, $options);
+    }
+
+    public function initial(array $options = array())
+    {
+        return $this->createRequest(InitialPurchaseRequest::class, $options);
+    }
+
+    public function purchase(array $options = array())
+    {
+        return $this->createRequest(PurchaseRequest::class, $options);
     }
 
     public function getCreateCardCurrency(): string

@@ -72,6 +72,47 @@ class XmlBuilder
     /**
      * @throws DOMException
      */
+    public function buildInitialXml(): bool|string
+    {
+        $tkkpg = $this->domDocument->createElement('TKKPG');
+        $request = $this->domDocument->createElement('Request');
+        $operation = $this->domDocument->createElement('Operation', self::CREATE_ORDER_OPERATION);
+        $language = $this->domDocument->createElement('Language', $this->data['Language']);
+        $order = $this->domDocument->createElement('Order');
+        $orderType = $this->domDocument->createElement('OrderType', self::ORDER_TYPE_PURCHASE);
+        $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
+        $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
+        $currency = $this->domDocument->createElement('Currency', $this->data['Currency']);
+        $description = $this->domDocument->createElement('Description', self::ORDER_TYPE_PURCHASE);
+        $approveUrl = $this->domDocument->createElement('ApproveURL', $this->data['ApproveURL']);
+        $cancelUrl = $this->domDocument->createElement('CancelURL', $this->data['CancelURL']);
+        $declineUrl = $this->domDocument->createElement('DeclineURL', $this->data['DeclineURL']);
+        $addParams = $this->domDocument->createElement('AddParams');
+        $senderCardUid = $this->domDocument->createElement('SenderCardUID', $this->data['SenderCardUID']);
+
+        $tkkpg->appendChild($request);
+        $request->appendChild($operation);
+        $request->appendChild($language);
+        $request->appendChild($order);
+        $order->appendChild($orderType);
+        $order->appendChild($merchant);
+        $order->appendChild($amount);
+        $order->appendChild($currency);
+        $order->appendChild($description);
+        $order->appendChild($approveUrl);
+        $order->appendChild($cancelUrl);
+        $order->appendChild($declineUrl);
+        $order->appendChild($addParams);
+        $addParams->appendChild($senderCardUid);
+
+        $this->domDocument->appendChild($tkkpg);
+
+        return $this->domDocument->saveXML();
+    }
+
+    /**
+     * @throws DOMException
+     */
     public function buildPurchaseXml(): bool|string
     {
         $tkkpg = $this->domDocument->createElement('TKKPG');
@@ -84,9 +125,10 @@ class XmlBuilder
         $sessionId = $this->domDocument->createElement('SessionID', $this->data['SessionID']);
         $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
         $currency = $this->domDocument->createElement('Currency', $this->data['Currency']);
-        $cardUid = $this->domDocument->createElement('CardUID', $this->data['CardUID']);
-        $eci = $this->domDocument->createElement('eci', 61);
+        $cardUid = $this->domDocument->createElement('CardUID', $this->data['SenderCardUID']);
+        $eci = $this->domDocument->createElement('eci', $this->data['eci']);
 
+        $tkkpg->appendChild($request);
         $request->appendChild($operation);
         $request->appendChild($language);
         $request->appendChild($order);
