@@ -6,8 +6,8 @@ use Ampeco\OmnipayKapitalbank\Message\AuthorizeRequest;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardNotification;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardRequest;
 use Ampeco\OmnipayKapitalbank\Message\InitialPurchaseRequest;
-use Ampeco\OmnipayKapitalbank\Message\NotificationRequest;
 use Ampeco\OmnipayKapitalbank\Message\PurchaseRequest;
+use Ampeco\OmnipayKapitalbank\Message\VoidRequest;
 use Omnipay\Common\AbstractGateway;
 
 /**
@@ -16,7 +16,6 @@ use Omnipay\Common\AbstractGateway;
  * @method \Omnipay\Common\Message\RequestInterface completePurchase(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface refund(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface fetchTransaction(array $options = [])
- * @method \Omnipay\Common\Message\RequestInterface void(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface updateCard(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface deleteCard(array $options = array())
  */
@@ -81,5 +80,10 @@ class Gateway extends AbstractGateway
     public function authorize(array $options = array())
     {
         return $this->createRequest(AuthorizeRequest::class, $options);
+    }
+
+    public function void(array $options = array())
+    {
+        return $this->createRequest(VoidRequest::class, $options);
     }
 }

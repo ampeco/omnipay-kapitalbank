@@ -10,6 +10,7 @@ class XmlBuilder
     public const CREATE_ORDER_OPERATION = 'CreateOrder';
     public const ORDER_TYPE_PURCHASE = 'Purchase';
     public const ORDER_TYPE_AUTHORIZE = 'PreAuth';
+    public const ORDER_TYPE_REVERSE = 'Reverse';
     private DOMDocument $domDocument;
 
     public function __construct(private readonly array $data)
@@ -145,5 +146,46 @@ class XmlBuilder
         $this->domDocument->appendChild($tkkpg);
 
         return $this->domDocument->saveXML();
+    }
+
+    public function buildVoidXml()
+    {
+        $tkkpg = $this->domDocument->createElement('TKKPG');
+        $request = $this->domDocument->createElement('Request');
+        $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_REVERSE);
+        $language = $this->domDocument->createElement('Language', $this->data['Language']);
+        $order = $this->domDocument->createElement('Order');
+        $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
+        $orderId = $this->domDocument->createElement('OrderID', $this->data['OrderID']);
+        $sessionId = $this->domDocument->createElement('SessionID', $this->data['SessionID']);
+        $paymentSubjectType = $this->domDocument->createElement('PaymentSubjectType', $this->data['PaymentSubjectType']);
+        $paymentType = $this->domDocument->createElement('PaymentType', $this->data['PaymentType']);
+        $paymentMethodType = $this->domDocument->createElement('PaymentMethodType', $this->data['PaymentMethodType']);
+        $quantity = $this->domDocument->createElement('Quantity', $this->data['Quantity']);
+        $source = $this->domDocument->createElement('Source', $this->data['Source']);
+        $positions = $this->domDocument->createElement('Positions');
+        $position = $this->domDocument->createElement('Position');
+        $description = $this->domDocument->createElement('Description','');
+
+        $tkkpg->appendChild($request);
+        $request->appendChild($operation);
+        $request->appendChild($language);
+        $request->appendChild($order);
+        $request->appendChild($sessionId);
+        $request->appendChild($source);
+        $request->appendChild($description);
+        $order->appendChild($positions);
+        $order->appendChild($orderId);
+        $order->appendChild($merchant);
+        $positions->appendChild($position);
+        $position->appendChild($paymentMethodType);
+        $position->appendChild($paymentSubjectType);
+        $position->appendChild($paymentType);
+        $position->appendChild($quantity);
+
+        $this->domDocument->appendChild($tkkpg);
+
+        return $this->domDocument->saveXML();
+
     }
 }

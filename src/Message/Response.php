@@ -9,6 +9,7 @@ class Response extends AbstractResponse
 {
     const SUCCESS_STATUS_CODE = '00';
     const ORDER_STATUS_APPROVED = 'APPROVED';
+    const ORDER_STATUS_PREAUTH_APPROVED = 'PREAUTH-APPROVED';
     const SUCCESS_RESPONSE_CODES = ['000', '001'];
 
     public function __construct(RequestInterface $request, array $data, protected int $code)

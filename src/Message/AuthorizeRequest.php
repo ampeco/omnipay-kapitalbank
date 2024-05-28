@@ -11,3 +11,4 @@ class AuthorizeRequest extends PurchaseRequest
         return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildPurchaseXml(XmlBuilder::ORDER_TYPE_AUTHORIZE)]));
     }
 }
+
