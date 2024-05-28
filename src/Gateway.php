@@ -3,6 +3,7 @@
 namespace Ampeco\OmnipayKapitalbank;
 
 use Ampeco\OmnipayKapitalbank\Message\AuthorizeRequest;
+use Ampeco\OmnipayKapitalbank\Message\CaptureRequest;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardNotification;
 use Ampeco\OmnipayKapitalbank\Message\CreateCardRequest;
 use Ampeco\OmnipayKapitalbank\Message\InitialPurchaseRequest;
@@ -12,7 +13,6 @@ use Omnipay\Common\AbstractGateway;
 
 /**
  * @method \Omnipay\Common\Message\RequestInterface completeAuthorize(array $options = array())
- * @method \Omnipay\Common\Message\RequestInterface capture(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface completePurchase(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface refund(array $options = array())
  * @method \Omnipay\Common\Message\RequestInterface fetchTransaction(array $options = [])
@@ -85,5 +85,10 @@ class Gateway extends AbstractGateway
     public function void(array $options = array())
     {
         return $this->createRequest(VoidRequest::class, $options);
+    }
+
+    public function capture(array $options = array())
+    {
+        return $this->createRequest(CaptureRequest::class, $options);
     }
 }

@@ -2,12 +2,11 @@
 
 namespace Ampeco\OmnipayKapitalbank\Message;
 
-class VoidResponse extends Response
+class CaptureResponse extends Response
 {
     public function isSuccessful(): bool
     {
-        info('VoidResponse....',[$this->data]);
         return parent::isSuccessful() && $this->data['Response']['Status'] == self::SUCCESS_STATUS_CODE
-            && in_array($this->data['Response']['Reversal']['RespCode'], self::SUCCESS_RESPONSE_CODES);
+            && in_array($this->data['Response']['POSResponse']['l']['@attributes']['value'], self::SUCCESS_RESPONSE_CODES);
     }
 }

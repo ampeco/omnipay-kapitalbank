@@ -11,6 +11,7 @@ class XmlBuilder
     public const ORDER_TYPE_PURCHASE = 'Purchase';
     public const ORDER_TYPE_AUTHORIZE = 'PreAuth';
     public const ORDER_TYPE_REVERSE = 'Reverse';
+    public const ORDER_TYPE_COMPLETION = 'Completion';
     private DOMDocument $domDocument;
 
     public function __construct(private readonly array $data)
@@ -187,5 +188,31 @@ class XmlBuilder
 
         return $this->domDocument->saveXML();
 
+    }
+
+    public function buildCaptureXml()
+    {
+        $tkkpg = $this->domDocument->createElement('TKKPG');
+        $request = $this->domDocument->createElement('Request');
+        $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_COMPLETION);
+        $language = $this->domDocument->createElement('Language', $this->data['Language']);
+        $order = $this->domDocument->createElement('Order');
+        $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
+        $orderId = $this->domDocument->createElement('OrderID', $this->data['OrderID']);
+        $sessionId = $this->domDocument->createElement('SessionID', $this->data['SessionID']);
+        $description = $this->domDocument->createElement('Description','');
+        $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
+        $tkkpg->appendChild($request);
+        $request->appendChild($operation);
+        $request->appendChild($language);
+        $request->appendChild($sessionId);
+        $request->appendChild($amount);
+        $request->appendChild($description);
+        $request->appendChild($order);
+        $order->appendChild($merchant);
+        $order->appendChild($orderId);
+        $this->domDocument->appendChild($tkkpg);
+
+        return $this->domDocument->saveXML();
     }
 }
