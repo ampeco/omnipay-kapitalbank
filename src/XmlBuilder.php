@@ -7,8 +7,9 @@ use DOMException;
 
 class XmlBuilder
 {
-    private const CREATE_ORDER_OPERATION = 'CreateOrder';
-    private const ORDER_TYPE_PURCHASE = 'Purchase';
+    public const CREATE_ORDER_OPERATION = 'CreateOrder';
+    public const ORDER_TYPE_PURCHASE = 'Purchase';
+    public const ORDER_TYPE_AUTHORIZE = 'PreAuth';
     private DOMDocument $domDocument;
 
     public function __construct(private readonly array $data)
@@ -72,14 +73,14 @@ class XmlBuilder
     /**
      * @throws DOMException
      */
-    public function buildInitialXml(): bool|string
+    public function buildInitialXml($orderType = self::ORDER_TYPE_PURCHASE): bool|string
     {
         $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', self::CREATE_ORDER_OPERATION);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
         $order = $this->domDocument->createElement('Order');
-        $orderType = $this->domDocument->createElement('OrderType', self::ORDER_TYPE_PURCHASE);
+        $orderType = $this->domDocument->createElement('OrderType', $orderType);
         $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
         $amount = $this->domDocument->createElement('Amount', $this->data['Amount']);
         $currency = $this->domDocument->createElement('Currency', $this->data['Currency']);
@@ -113,11 +114,11 @@ class XmlBuilder
     /**
      * @throws DOMException
      */
-    public function buildPurchaseXml(): bool|string
+    public function buildPurchaseXml($operation = self::ORDER_TYPE_PURCHASE): bool|string
     {
         $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
-        $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_PURCHASE);
+        $operation = $this->domDocument->createElement('Operation', $operation);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
         $order = $this->domDocument->createElement('Order');
         $merchant = $this->domDocument->createElement('Merchant', $this->data['Merchant']);
