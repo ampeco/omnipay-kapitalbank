@@ -211,4 +211,14 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
     {
         return $this->getParameter('eci');
     }
+
+    public function setOrderType($value)
+    {
+        $this->setParameter('OrderType', $value);
+    }
+
+    public function getOrderType()
+    {
+        return $this->getParameter('OrderType');
+    }
 }

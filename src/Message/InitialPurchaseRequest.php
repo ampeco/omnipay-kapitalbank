@@ -25,7 +25,7 @@ class InitialPurchaseRequest extends AbstractRequest
 
     public function sendData($data)
     {
-        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildInitialXml()]));
+        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildInitialXml($this->getOrderType())]));
     }
 
     protected function createResponse(array $data, int $statusCode): Response

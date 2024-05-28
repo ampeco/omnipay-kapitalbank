@@ -144,7 +144,7 @@ class XmlBuilder
         $tkkpg->appendChild($request);
 
         $this->domDocument->appendChild($tkkpg);
-
+        info('XML::::', [$this->domDocument->saveXML()]);
         return $this->domDocument->saveXML();
     }
 
