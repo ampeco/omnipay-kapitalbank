@@ -12,20 +12,19 @@ class AuthorizeResponse extends Response
             && in_array($this->data['XMLOut']['Message']['ResponseCode'], self::SUCCESS_RESPONSE_CODES);
     }
 
-    public function getTransactionReference(): bool|string|null
+    public function getTransactionReference(): ?string
     {
-        $ref= json_encode([
+        $ref = json_encode([
             'sessionId' => $this->data['XMLOut']['Message']['SessionID'],
             'orderId' => $this->data['XMLOut']['Message']['OrderID'],
         ]);
 
+        if ($ref === false) {
+            return null;
+        }
+
         info('TRANSACTION REFERENCE::::', [$ref]);
         info('DATA::::', [$this->data]);
         return $ref;
-    }
-
-    protected function createResponse(array $data, int $statusCode): Response
-    {
-        return $this->response = new AuthorizeResponse($this, $data, $statusCode);
     }
 }

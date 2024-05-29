@@ -6,22 +6,21 @@ class InitialResponse extends Response
 {
     public function isSuccessful() : bool
     {
-        return parent::isSuccessful() && $this->data['Response']['Status'] == self::SUCCESS_STATUS_CODE; // TODO TO PARENT ?
+        return parent::isSuccessful() && $this->data['Response']['Status'] == self::SUCCESS_STATUS_CODE;
     }
 
-    public function getData()
+    public function getData(): mixed
     {
         return $this->data;
     }
 
-    public function getSessionId()
+    public function getSessionId(): ?string
     {
         return @$this->data['Response']['Order']['SessionID'];
     }
 
-    public function getOrderId()
+    public function getOrderId(): ?string
     {
         return @$this->data['Response']['Order']['OrderID'];
     }
-
 }

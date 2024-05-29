@@ -3,9 +3,9 @@
 namespace Ampeco\OmnipayKapitalbank\Message;
 
 use Ampeco\OmnipayKapitalBank\Gateway;
-use Ampeco\OmnipayKapitalbank\XmlBuilder;
 use DOMException;
 use Omnipay\Common\Message\AbstractRequest as OmniPayAbstractRequest;
+use Omnipay\Common\Message\ResponseInterface;
 
 /**
  * @method \Omnipay\Common\Message\NotificationInterface acceptNotification(array $options = array())
@@ -27,7 +27,6 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
     protected const API_URL_PROD = 'https://3dsrv.kapitalbank.az:5443';
 
     protected ?Gateway $gateway;
-    private $key;
 
     abstract protected function createResponse(array $data, int $statusCode): Response;
 
@@ -44,8 +43,7 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
 
     public function getBaseUrl(): string
     {
-        return self::API_URL_TEST;
-//        return $this->getTestMode() ? self::API_URL_TEST : self::API_URL_PROD; // TODO
+        return $this->getTestMode() ? self::API_URL_TEST : self::API_URL_PROD;
     }
 
     public function getRequest(): string
@@ -53,7 +51,7 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         return 'POST';
     }
 
-    public function getData()
+    public function getData(): array
     {
        return [
          'merchant' => $this->getMerchant(),
@@ -63,7 +61,7 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
     /**
      * @throws DOMException
      */
-    public function sendData($data)
+    public function sendData($data): ResponseInterface|Response
     {
         $url = $this->getBaseUrl() . $this->getEndpoint();
 
@@ -95,130 +93,153 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
         return $this->createResponse($response, $statusCode);
     }
 
-    public function setMerchant($value)
+    public function setMerchant($value): void
     {
         $this->setParameter('Merchant', $value);
     }
 
-    public function getMerchant()
+    public function getMerchant(): string
     {
         return $this->getParameter('Merchant');
     }
 
-    public function getAmount()
+    public function getAmount(): string
     {
         return number_format(parent::getAmount(), 2, '', '');
     }
 
-    public function setApproveUrl($value)
+    public function setApproveUrl($value): void
     {
         $this->setParameter('ApproveURL', $value);
     }
 
-    public function getApproveUrl()
+    public function getApproveUrl(): string
     {
         return $this->getParameter('ApproveURL');
     }
 
-    public function setCancelUrl($value)
+    public function setCancelUrl($value): void
     {
         $this->setParameter('CancelURL', $value);
     }
 
-    public function getCancelUrl()
+    public function getCancelUrl(): string
     {
         return $this->getParameter('CancelURL');
     }
 
-    public function setDeclineUrl($value)
+    public function setDeclineUrl($value): void
     {
         $this->setParameter('DeclineURL', $value);
     }
 
-    public function getDeclineUrl()
+    public function getDeclineUrl(): string
     {
         return $this->getParameter('DeclineURL');
     }
 
-    public function setMerchantCertificate($value)
+    public function setMerchantCertificate($value): void
     {
         $this->setParameter('MerchantCertificate', $value);
     }
 
-    public function getMerchantCertificate()
+    public function getMerchantCertificate(): string
     {
         return $this->getParameter('MerchantCertificate');
     }
 
-    public function setMerchantKey($value)
+    public function setMerchantKey($value): void
     {
         $this->setParameter('MerchantKey', $value);
     }
 
-    public function getMerchantKey()
+    public function getMerchantKey(): string
     {
         return $this->getParameter('MerchantKey');
     }
 
-    public function getLanguage()
+    public function getLanguage(): string
     {
         return strtoupper($this->getParameter('Language'));
     }
 
-    public function setLanguage($value)
+    public function setLanguage($value): void
     {
         $this->setParameter('Language', $value);
     }
 
-    public function getSenderCardUID()
+    public function getSenderCardUID(): string
     {
-//        $this->key = 'Sender';
-//        return strtoupper($this->getParameter('' . $this->key . 'CardUID'));
         return $this->getParameter('SenderCardUID');
     }
 
-    public function setSenderCardUID($value)
+    public function setSenderCardUID($value): void
     {
         $this->setParameter('SenderCardUID', $value);
     }
 
-    public function setSessionId($value)
+    public function setSessionId($value): void
     {
         $this->setParameter('SessionId', $value);
     }
 
-    public function getSessionId()
+    public function getSessionId(): string
     {
         return $this->getParameter('SessionId');
     }
 
-    public function setOrderId($value)
+    public function setOrderId($value): void
     {
         $this->setParameter('OrderId', $value);
     }
 
-    public function getOrderId()
+    public function getOrderId(): string
     {
         return $this->getParameter('OrderId');
     }
 
-    public function setEci($value)
+    public function setEci($value): void
     {
         $this->setParameter('eci', $value);
     }
 
-    public function getEci()
+    public function getEci(): int
     {
         return $this->getParameter('eci');
     }
 
-    public function setOrderType($value)
+    public function setOrderType($value): void
     {
         $this->setParameter('OrderType', $value);
     }
 
-    public function getOrderType()
+    public function getOrderType(): string
     {
         return $this->getParameter('OrderType');
+    }
+
+    public function setName($value): void
+    {
+        $this->setParameter('Name', $value);
+    }
+
+    public function getName(): string
+    {
+        return $this->getParameter('Name');
+    }
+
+    public function setTitle($value): void
+    {
+        $this->setParameter('Title', $value);
+    }
+
+    public function getTitle(): string
+    {
+        return $this->getParameter('Title');
+    }
+
+    protected function constructDataPayload(array $data, string $payload): array
+    {
+        return array_merge($data, ['payload' => $payload]);
     }
 }

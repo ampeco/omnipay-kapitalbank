@@ -23,25 +23,16 @@ class CreateCardNotification implements NotificationInterface
         return $this->data['Message']['OrderDescription'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTransactionReference(): ?string
     {
         return $this->data['Message']['TranId'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getTransactionStatus(): ?string
     {
         return $this->data['Message']['OrderStatus'] ?? null;
     }
 
-    /**
-     * @inheritDoc
-     */
     public function getMessage(): ?string
     {
         return $this->data['Message']['ResponseDescription'] ?? null;
