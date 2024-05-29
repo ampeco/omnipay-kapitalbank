@@ -13,6 +13,7 @@ class XmlBuilder
     public const ORDER_TYPE_AUTHORIZE = 'PreAuth';
     public const ORDER_TYPE_REVERSE = 'Reverse';
     public const ORDER_TYPE_COMPLETION = 'Completion';
+
     private DOMDocument $domDocument;
     private DOMElement $tkkpgElement;
 
@@ -27,7 +28,6 @@ class XmlBuilder
      */
     public function buildCreateCardXml(): ?string
     {
-//        $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', self::CREATE_ORDER_OPERATION);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
@@ -70,9 +70,6 @@ class XmlBuilder
         $customFields->appendChild($param);
         $this->tkkpgElement->appendChild($request);
 
-//        $this->domDocument->appendChild($tkkpg);
-//
-//        return $this->domDocument->saveXML();
         return $this->saveDomDocumentXml();
     }
 
@@ -81,7 +78,6 @@ class XmlBuilder
      */
     public function buildInitialXml($orderType = self::ORDER_TYPE_PURCHASE): ?string
     {
-//        $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', self::CREATE_ORDER_OPERATION);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
@@ -112,9 +108,6 @@ class XmlBuilder
         $order->appendChild($addParams);
         $addParams->appendChild($senderCardUid);
 
-//        $this->domDocument->appendChild($tkkpg);
-//
-//        return $this->domDocument->saveXML();
         return $this->saveDomDocumentXml();
     }
 
@@ -123,7 +116,6 @@ class XmlBuilder
      */
     public function buildPurchaseXml($operation = self::ORDER_TYPE_PURCHASE): ?string
     {
-//        $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', $operation);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
@@ -147,19 +139,12 @@ class XmlBuilder
         $request->appendChild($currency);
         $request->appendChild($cardUid);
         $request->appendChild($eci);
-//        $tkkpg->appendChild($request);
 
-//        $this->domDocument->appendChild($tkkpg);
-//        info('XML::::', [$this->domDocument->saveXML()]);
-//
-//        $xml = $this->domDocument->saveXML();
-//        return $xml !== false ? $xml : null;
         return $this->saveDomDocumentXml();
     }
 
     public function buildVoidXml(): ?string
     {
-//        $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_REVERSE);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
@@ -192,16 +177,11 @@ class XmlBuilder
         $position->appendChild($paymentType);
         $position->appendChild($quantity);
 
-//        $this->domDocument->appendChild($tkkpg);
-//
-//        return $this->domDocument->saveXML();
         return $this->saveDomDocumentXml();
-
     }
 
     public function buildCaptureXml(): ?string
     {
-//        $tkkpg = $this->domDocument->createElement('TKKPG');
         $request = $this->domDocument->createElement('Request');
         $operation = $this->domDocument->createElement('Operation', self::ORDER_TYPE_COMPLETION);
         $language = $this->domDocument->createElement('Language', $this->data['Language']);
@@ -221,18 +201,14 @@ class XmlBuilder
         $order->appendChild($merchant);
         $order->appendChild($orderId);
 
-//        $this->domDocument->appendChild($tkkpg);
-//
-//        return $this->domDocument->saveXML();
         return $this->saveDomDocumentXml();
     }
 
     private function saveDomDocumentXml(): ?string
     {
         $this->domDocument->appendChild($this->tkkpgElement);
-        info('XML::::', [$this->domDocument->saveXML()]); // TODO Remove
-
         $xml = $this->domDocument->saveXML();
+
         return $xml !== false ? $xml : null;
     }
 }

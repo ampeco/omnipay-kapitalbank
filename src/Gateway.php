@@ -27,10 +27,6 @@ class Gateway extends AbstractGateway
         return 'Kapital Bank';
     }
 
-    public function __call(string $name, array $arguments)
-    {
-    }
-
     public function createCard(array $options = array()): RequestInterface
     {
         return $this->createRequest(CreateCardRequest::class, $options);
@@ -48,8 +44,7 @@ class Gateway extends AbstractGateway
 
     public function getCreateCardCurrency(): string
     {
-//        return 'AZN';// TODO
-        return 'EUR';
+        return 'AZN';
     }
 
     public function getCreateCardAmount(): float

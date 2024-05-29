@@ -15,7 +15,6 @@ class CreateCardNotification implements NotificationInterface
         $jsonString = json_encode($xmlResponseData);
 
         $this->data = json_decode($jsonString, true) ?? null;
-        info('DATA::::', [$this->data]);
     }
 
     public function getData(): ?string
@@ -25,7 +24,16 @@ class CreateCardNotification implements NotificationInterface
 
     public function getTransactionReference(): ?string
     {
-        return $this->data['Message']['TranId'] ?? null;
+        $ref = json_encode([
+            'sessionId' => $this->data['Message']['SessionID'],
+            'orderId' => $this->data['Message']['OrderID'],
+        ]);
+
+        if ($ref === false) {
+            return null;
+        }
+
+        return $ref;
     }
 
     public function getTransactionStatus(): ?string

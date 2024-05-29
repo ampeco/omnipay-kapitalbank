@@ -26,9 +26,7 @@ class CreateCardRequest extends AbstractRequest
 
     public function sendData($data): ResponseInterface|Response
     {
-//        return parent::sendData(array_merge($data, ['payload' => (new XmlBuilder($data))->buildCreateCardXml()]));
         return parent::sendData(
-//            array_merge($data, ['payload' => (new XmlBuilder($data))->buildPurchaseXml()])
             parent::constructDataPayload($data, (new XmlBuilder($data))->buildCreateCardXml())
         );
     }
