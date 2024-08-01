@@ -60,6 +60,11 @@ class CreateCardNotification implements NotificationInterface
         return $this->data['Message']['CardRegistrationResponse']['CardUID'];
     }
 
+    public function getMaskedPAN(): ?string
+    {
+        return $this->data['Message']['CardRegistrationResponse']['MaskedPAN'] ?? null;
+    }
+
     public function getCardType(): ?string
     {
         return $this->data['Message']['CardRegistrationResponse']['Brand'] ?? null;
