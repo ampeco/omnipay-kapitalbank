@@ -14,6 +14,7 @@ class Response extends AbstractResponse
 
     public function __construct(RequestInterface $request, array $data, protected int $code)
     {
+        info('KapitalBank Raw Response', ['response' => $data]);
         parent::__construct($request, $data);
     }
 
