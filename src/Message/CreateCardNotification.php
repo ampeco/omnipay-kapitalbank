@@ -24,6 +24,10 @@ class CreateCardNotification implements NotificationInterface
 
     public function getTransactionReference(): ?string
     {
+        if (!isset($this->data['Message']['SessionID']) || !isset($this->data['Message']['OrderID'])) {
+            return null;
+        }
+
         $ref = json_encode([
             'sessionId' => $this->data['Message']['SessionID'],
             'orderId' => $this->data['Message']['OrderID'],
@@ -73,7 +77,8 @@ class CreateCardNotification implements NotificationInterface
     public function isSuccessful(): bool
     {
         return
-            in_array($this->data['Message']['ResponseCode'], [self::RESPONSE_CODE_APPROVED_TOKENIZE, self::RESPONSE_CODE_APPROVED])
+            isset($this->data['Message']['ResponseCode'])
+            && in_array($this->data['Message']['ResponseCode'], [self::RESPONSE_CODE_APPROVED_TOKENIZE, self::RESPONSE_CODE_APPROVED])
             && ($this->data['Message']['CardRegistrationResponse']['CardUID'] ?? false);
     }
 }
