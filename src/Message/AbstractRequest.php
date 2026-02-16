@@ -2,9 +2,13 @@
 
 namespace Ampeco\OmnipayKapitalbank\Message;
 
+use Ampeco\Modules\Monitoring\Http\MonitoredOmnipayHttpClient;
 use Ampeco\OmnipayKapitalbank\CommonParameters;
 use Ampeco\OmnipayKapitalBank\Gateway;
 use DOMException;
+use GuzzleHttp\Client as GuzzleClient;
+use Http\Adapter\Guzzle7\Client as GuzzleAdapter;
+use Omnipay\Common\Http\Client as OmnipayHttpClient;
 use Omnipay\Common\Message\AbstractRequest as OmniPayAbstractRequest;
 use Omnipay\Common\Message\ResponseInterface;
 
@@ -68,32 +72,35 @@ abstract class AbstractRequest extends OmniPayAbstractRequest
     {
         $url = $this->getBaseUrl() . $this->getEndpoint();
 
-        $merchantCertificate = $this->getMerchantCertificate();
         $certFile = tempnam(sys_get_temp_dir(), "cert_");
-        file_put_contents($certFile, $merchantCertificate);
+        file_put_contents($certFile, $this->getMerchantCertificate());
 
-        $merchantKey = $this->getMerchantKey();
         $keyFile = tempnam(sys_get_temp_dir(), "cert_");
-        file_put_contents($keyFile, $merchantKey);
+        file_put_contents($keyFile, $this->getMerchantKey());
 
-        $ch = curl_init();
-        $header = array("Content-Type: text/html; charset=utf-8");
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, $header);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($ch, CURLOPT_SSLCERT, $certFile);
-        curl_setopt($ch, CURLOPT_SSLKEY, $keyFile);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $data['payload']);
-        curl_setopt($ch, CURLOPT_POST, true);
-        $statusCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-        $output = curl_exec($ch);
-        curl_close($ch);
+        try {
+            $guzzle = new GuzzleClient([
+                'cert' => $certFile,
+                'ssl_key' => $keyFile,
+                'verify' => false,
+                'allow_redirects' => true,
+            ]);
+            $innerClient = new OmnipayHttpClient(new GuzzleAdapter($guzzle));
+            $client = new MonitoredOmnipayHttpClient($innerClient, 'KapitalBank');
 
-        $response = json_decode(json_encode(simplexml_load_string($output)), true);
-        return $this->createResponse($response, $statusCode);
+            $httpResponse = $client->request(
+                'POST',
+                $url,
+                ['Content-Type' => 'text/html; charset=utf-8'],
+                $data['payload'],
+            );
+        } finally {
+            @unlink($certFile);
+            @unlink($keyFile);
+        }
+
+        $response = json_decode(json_encode(simplexml_load_string($httpResponse->getBody()->getContents())), true);
+        return $this->createResponse($response, $httpResponse->getStatusCode());
     }
 
     protected function constructDataPayload(array $data, string $payload): array
